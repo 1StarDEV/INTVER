@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INTVER | Advanced User Management System</title>
+    <title>INTVER | Manual User Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -752,6 +752,59 @@
         .notification.info {
             background: var(--accent);
         }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+        
+        /* Add User Button */
+        .add-user-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .add-user-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+        }
+        
+        .add-user-btn i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+        
+        .add-user-btn span {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -776,7 +829,7 @@
                         <a href="#">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>Sign In/Out</span>
-                            <span class="menu-badge">2 Active</span>
+                            <span class="menu-badge" id="activeUsersBadge">0</span>
                         </a>
                     </li>
                     <li>
@@ -789,7 +842,7 @@
                         <a href="#">
                             <i class="fas fa-exclamation-triangle"></i>
                             <span>Discipline</span>
-                            <span class="menu-badge">3 Pending</span>
+                            <span class="menu-badge" id="pendingActionsBadge">0</span>
                         </a>
                     </li>
                     <li>
@@ -842,7 +895,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
-                    <div class="card-value" id="activeUsersCount">2</div>
+                    <div class="card-value" id="activeUsersCount">0</div>
                     <div class="card-footer">Currently signed in to the system</div>
                 </div>
                 <div class="card">
@@ -852,7 +905,7 @@
                             <i class="fas fa-sign-in-alt"></i>
                         </div>
                     </div>
-                    <div class="card-value" id="todaySigningsCount">8</div>
+                    <div class="card-value" id="todaySigningsCount">0</div>
                     <div class="card-footer">Total check-ins today</div>
                 </div>
                 <div class="card">
@@ -862,7 +915,7 @@
                             <i class="fas fa-clock"></i>
                         </div>
                     </div>
-                    <div class="card-value" id="avgSessionDuration">2h 34m</div>
+                    <div class="card-value" id="avgSessionDuration">0h 0m</div>
                     <div class="card-footer">Average session duration</div>
                 </div>
                 <div class="card">
@@ -872,159 +925,21 @@
                             <i class="fas fa-exclamation-circle"></i>
                         </div>
                     </div>
-                    <div class="card-value" id="pendingActionsCount">3</div>
+                    <div class="card-value" id="pendingActionsCount">0</div>
                     <div class="card-footer">Disciplinary actions needed</div>
                 </div>
             </div>
 
             <!-- User Cards -->
-            <div class="user-cards">
-                <!-- Chris Card -->
-                <div class="user-card" id="user-chris">
-                    <div class="user-card-header">
-                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_qoql0aqoql0aqoql.png?updatedAt=1762730489451" alt="Chris" class="user-card-img">
-                        <div class="user-card-info">
-                            <h3>Chris</h3>
-                            <p>ID: 2347802342</p>
-                        </div>
-                    </div>
-                    <div class="user-card-body">
-                        <div class="user-stat">
-                            <span class="user-stat-label">Status:</span>
-                            <span class="user-stat-value"><span class="user-status status-in">Signed In</span></span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Check-in Time:</span>
-                            <span class="user-stat-value" id="chris-checkin">09:15 AM</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Current Session:</span>
-                            <span class="user-stat-value" id="chris-session">2h 45m</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Disciplinary Points:</span>
-                            <span class="user-stat-value" id="chris-points">0</span>
-                        </div>
-                    </div>
-                    <div class="user-card-footer">
-                        <button class="btn btn-danger sign-out-btn" data-user="Chris">
-                            <i class="fas fa-sign-out-alt"></i> Sign Out
-                        </button>
-                        <button class="btn btn-primary discipline-btn" data-user="Chris">
-                            <i class="fas fa-exclamation-triangle"></i> Discipline
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Braylee Card -->
-                <div class="user-card" id="user-braylee">
-                    <div class="user-card-header">
-                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_gfz912gfz912gfz9.png?updatedAt=1762730489086" alt="Braylee" class="user-card-img">
-                        <div class="user-card-info">
-                            <h3>Braylee</h3>
-                            <p>ID: 62347890323</p>
-                        </div>
-                    </div>
-                    <div class="user-card-body">
-                        <div class="user-stat">
-                            <span class="user-stat-label">Status:</span>
-                            <span class="user-stat-value"><span class="user-status status-out">Signed Out</span></span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Last Session:</span>
-                            <span class="user-stat-value">1h 30m</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Last Activity:</span>
-                            <span class="user-stat-value">Yesterday, 5:30 PM</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Disciplinary Points:</span>
-                            <span class="user-stat-value" id="braylee-points">2</span>
-                        </div>
-                    </div>
-                    <div class="user-card-footer">
-                        <button class="btn btn-success sign-in-btn" data-user="Braylee">
-                            <i class="fas fa-sign-in-alt"></i> Sign In
-                        </button>
-                        <button class="btn btn-primary discipline-btn" data-user="Braylee">
-                            <i class="fas fa-exclamation-triangle"></i> Discipline
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Braxton Card -->
-                <div class="user-card" id="user-braxton">
-                    <div class="user-card-header">
-                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_avef86avef86avef.png?updatedAt=1762730489187" alt="Braxton" class="user-card-img">
-                        <div class="user-card-info">
-                            <h3>Braxton</h3>
-                            <p>ID: 234780234890</p>
-                        </div>
-                    </div>
-                    <div class="user-card-body">
-                        <div class="user-stat">
-                            <span class="user-stat-label">Status:</span>
-                            <span class="user-stat-value"><span class="user-status status-in">Signed In</span></span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Check-in Time:</span>
-                            <span class="user-stat-value" id="braxton-checkin">10:05 AM</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Current Session:</span>
-                            <span class="user-stat-value" id="braxton-session">1h 55m</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Disciplinary Points:</span>
-                            <span class="user-stat-value" id="braxton-points">1</span>
-                        </div>
-                    </div>
-                    <div class="user-card-footer">
-                        <button class="btn btn-danger sign-out-btn" data-user="Braxton">
-                            <i class="fas fa-sign-out-alt"></i> Sign Out
-                        </button>
-                        <button class="btn btn-primary discipline-btn" data-user="Braxton">
-                            <i class="fas fa-exclamation-triangle"></i> Discipline
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Lacey Card -->
-                <div class="user-card" id="user-lacey">
-                    <div class="user-card-header">
-                        <img src="https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472" alt="Lacey" class="user-card-img">
-                        <div class="user-card-info">
-                            <h3>Lacey</h3>
-                            <p>ID: 23940236849001</p>
-                        </div>
-                    </div>
-                    <div class="user-card-body">
-                        <div class="user-stat">
-                            <span class="user-stat-label">Status:</span>
-                            <span class="user-stat-value"><span class="user-status status-out">Signed Out</span></span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Last Session:</span>
-                            <span class="user-stat-value">3h 20m</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Last Activity:</span>
-                            <span class="user-stat-value">Today, 12:15 PM</span>
-                        </div>
-                        <div class="user-stat">
-                            <span class="user-stat-label">Disciplinary Points:</span>
-                            <span class="user-stat-value" id="lacey-points">0</span>
-                        </div>
-                    </div>
-                    <div class="user-card-footer">
-                        <button class="btn btn-success sign-in-btn" data-user="Lacey">
-                            <i class="fas fa-sign-in-alt"></i> Sign In
-                        </button>
-                        <button class="btn btn-primary discipline-btn" data-user="Lacey">
-                            <i class="fas fa-exclamation-triangle"></i> Discipline
-                        </button>
-                    </div>
+            <div class="user-cards" id="userCardsContainer">
+                <!-- Empty state - no users added yet -->
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>No Users Added Yet</h3>
+                    <p>Start by adding users to the system</p>
+                    <button class="btn btn-primary" id="addFirstUserBtn">
+                        <i class="fas fa-user-plus"></i> Add First User
+                    </button>
                 </div>
             </div>
 
@@ -1032,7 +947,7 @@
             <div class="recent-signings">
                 <div class="section-header">
                     <h2 class="section-title">Recent Signings</h2>
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" id="exportDataBtn">
                         <i class="fas fa-download"></i> Export Data
                     </button>
                 </div>
@@ -1049,47 +964,42 @@
                     </thead>
                     <tbody id="recentSigningsTable">
                         <tr>
-                            <td>Chris</td>
-                            <td>2347802342</td>
-                            <td>09:15 AM</td>
-                            <td>-</td>
-                            <td>2h 45m</td>
-                            <td><span class="badge badge-success">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>Braxton</td>
-                            <td>234780234890</td>
-                            <td>10:05 AM</td>
-                            <td>-</td>
-                            <td>1h 55m</td>
-                            <td><span class="badge badge-success">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lacey</td>
-                            <td>23940236849001</td>
-                            <td>09:00 AM</td>
-                            <td>12:15 PM</td>
-                            <td>3h 15m</td>
-                            <td><span class="badge badge-warning">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>Braylee</td>
-                            <td>62347890323</td>
-                            <td>04:00 PM</td>
-                            <td>05:30 PM</td>
-                            <td>1h 30m</td>
-                            <td><span class="badge badge-warning">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>Chris</td>
-                            <td>2347802342</td>
-                            <td>01:30 PM</td>
-                            <td>04:45 PM</td>
-                            <td>3h 15m</td>
-                            <td><span class="badge badge-warning">Completed</span></td>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <h3>No Recent Activity</h3>
+                                <p>Sign-in/out activity will appear here</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New User</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" class="form-control" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="text" id="userId" class="form-control" placeholder="Enter unique user ID">
+                </div>
+                <div class="form-group">
+                    <label for="userImage">Profile Image URL (Optional)</label>
+                    <input type="text" id="userImage" class="form-control" placeholder="Paste image URL">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirmAddUser">Add User</button>
+                <button class="btn btn-danger close-modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -1104,7 +1014,9 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="signInUser">User</label>
-                    <input type="text" id="signInUser" class="form-control" readonly>
+                    <select id="signInUser" class="form-control">
+                        <option value="">Select a user to sign in</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="signInTime">Time</label>
@@ -1132,15 +1044,13 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="signOutUser">User</label>
-                    <input type="text" id="signOutUser" class="form-control" readonly>
+                    <select id="signOutUser" class="form-control">
+                        <option value="">Select a user to sign out</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="signOutTime">Time</label>
                     <input type="text" id="signOutTime" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="sessionDuration">Session Duration</label>
-                    <input type="text" id="sessionDuration" class="form-control" readonly>
                 </div>
                 <div class="form-group">
                     <label for="signOutNotes">Notes (Optional)</label>
@@ -1164,7 +1074,9 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="disciplineUser">User</label>
-                    <input type="text" id="disciplineUser" class="form-control" readonly>
+                    <select id="disciplineUser" class="form-control">
+                        <option value="">Select a user</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="points">Points to Deduct</label>
@@ -1202,48 +1114,14 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Application State
+        // Application State - Starts completely empty
         const state = {
-            users: {
-                'Chris': { 
-                    id: '2347802342', 
-                    status: 'in', 
-                    checkInTime: new Date(new Date().setHours(9, 15, 0, 0)),
-                    points: 0,
-                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_qoql0aqoql0aqoql.png?updatedAt=1762730489451'
-                },
-                'Braylee': { 
-                    id: '62347890323', 
-                    status: 'out', 
-                    lastSession: { duration: '1h 30m', endTime: 'Yesterday, 5:30 PM' },
-                    points: 2,
-                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_gfz912gfz912gfz9.png?updatedAt=1762730489086'
-                },
-                'Braxton': { 
-                    id: '234780234890', 
-                    status: 'in', 
-                    checkInTime: new Date(new Date().setHours(10, 5, 0, 0)),
-                    points: 1,
-                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_avef86avef86avef.png?updatedAt=1762730489187'
-                },
-                'Lacey': { 
-                    id: '23940236849001', 
-                    status: 'out', 
-                    lastSession: { duration: '3h 20m', endTime: 'Today, 12:15 PM' },
-                    points: 0,
-                    image: 'https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472'
-                }
-            },
-            recentSignings: [
-                { user: 'Chris', id: '2347802342', checkIn: '09:15 AM', checkOut: '-', duration: '2h 45m', status: 'active' },
-                { user: 'Braxton', id: '234780234890', checkIn: '10:05 AM', checkOut: '-', duration: '1h 55m', status: 'active' },
-                { user: 'Lacey', id: '23940236849001', checkIn: '09:00 AM', checkOut: '12:15 PM', duration: '3h 15m', status: 'completed' },
-                { user: 'Braylee', id: '62347890323', checkIn: '04:00 PM', checkOut: '05:30 PM', duration: '1h 30m', status: 'completed' },
-                { user: 'Chris', id: '2347802342', checkIn: '01:30 PM', checkOut: '04:45 PM', duration: '3h 15m', status: 'completed' }
-            ],
-            activeUsers: 2,
-            todaySignings: 8,
-            pendingActions: 3
+            users: {},
+            recentSignings: [],
+            activeUsers: 0,
+            todaySignings: 0,
+            pendingActions: 0,
+            sessionTimers: {}
         };
 
         // DOM Elements
@@ -1255,11 +1133,12 @@
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const sidebar = document.querySelector('.sidebar');
         const notification = document.getElementById('notification');
+        const userCardsContainer = document.getElementById('userCardsContainer');
+        const recentSigningsTable = document.getElementById('recentSigningsTable');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             updateDashboardStats();
-            startSessionTimers();
             setupEventListeners();
         });
 
@@ -1268,75 +1147,115 @@
             document.getElementById('activeUsersCount').textContent = state.activeUsers;
             document.getElementById('todaySigningsCount').textContent = state.todaySignings;
             document.getElementById('pendingActionsCount').textContent = state.pendingActions;
+            document.getElementById('activeUsersBadge').textContent = state.activeUsers;
+            document.getElementById('pendingActionsBadge').textContent = state.pendingActions;
             
-            // Update user points
-            document.getElementById('chris-points').textContent = state.users.Chris.points;
-            document.getElementById('braylee-points').textContent = state.users.Braylee.points;
-            document.getElementById('braxton-points').textContent = state.users.Braxton.points;
-            document.getElementById('lacey-points').textContent = state.users.Lacey.points;
-        }
-
-        // Start session timers for active users
-        function startSessionTimers() {
-            setInterval(() => {
-                const now = new Date();
-                
-                // Update Chris session timer
-                if (state.users.Chris.status === 'in') {
-                    const diff = now - state.users.Chris.checkInTime;
-                    const hours = Math.floor(diff / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    document.getElementById('chris-session').textContent = `${hours}h ${minutes}m`;
+            // Calculate average session duration
+            if (state.recentSignings.length > 0) {
+                const completedSessions = state.recentSignings.filter(s => s.status === 'completed');
+                if (completedSessions.length > 0) {
+                    let totalMinutes = 0;
+                    completedSessions.forEach(session => {
+                        const duration = session.duration;
+                        const hours = parseInt(duration.split('h')[0]);
+                        const minutes = parseInt(duration.split('h')[1].split('m')[0]);
+                        totalMinutes += (hours * 60) + minutes;
+                    });
+                    const avgMinutes = Math.round(totalMinutes / completedSessions.length);
+                    const hours = Math.floor(avgMinutes / 60);
+                    const minutes = avgMinutes % 60;
+                    document.getElementById('avgSessionDuration').textContent = `${hours}h ${minutes}m`;
                 }
-                
-                // Update Braxton session timer
-                if (state.users.Braxton.status === 'in') {
-                    const diff = now - state.users.Braxton.checkInTime;
-                    const hours = Math.floor(diff / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    document.getElementById('braxton-session').textContent = `${hours}h ${minutes}m`;
-                }
-            }, 60000); // Update every minute
+            }
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Open Sign In Modal
-            signInBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const userName = this.getAttribute('data-user');
-                    document.getElementById('signInUser').value = userName;
-                    document.getElementById('signInTime').value = getCurrentTime();
-                    document.getElementById('signInModal').style.display = 'flex';
-                });
+            // Add First User Button
+            document.getElementById('addFirstUserBtn').addEventListener('click', function() {
+                document.getElementById('addUserModal').style.display = 'flex';
             });
 
-            // Open Sign Out Modal
-            signOutBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const userName = this.getAttribute('data-user');
-                    document.getElementById('signOutUser').value = userName;
-                    document.getElementById('signOutTime').value = getCurrentTime();
-                    
-                    // Calculate session duration
-                    const user = state.users[userName];
-                    const now = new Date();
-                    const diff = now - user.checkInTime;
-                    const hours = Math.floor(diff / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    document.getElementById('sessionDuration').value = `${hours}h ${minutes}m`;
-                    
-                    document.getElementById('signOutModal').style.display = 'flex';
-                });
+            // Add User Modal
+            document.getElementById('confirmAddUser').addEventListener('click', function() {
+                const userName = document.getElementById('userName').value;
+                const userId = document.getElementById('userId').value;
+                const userImage = document.getElementById('userImage').value || 'https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472';
+                
+                if (userName && userId) {
+                    addUser(userName, userId, userImage);
+                    document.getElementById('addUserModal').style.display = 'none';
+                    // Clear form
+                    document.getElementById('userName').value = '';
+                    document.getElementById('userId').value = '';
+                    document.getElementById('userImage').value = '';
+                } else {
+                    showNotification('Please fill in all required fields', 'error');
+                }
             });
 
-            // Open Discipline Modal
-            disciplineBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const userName = this.getAttribute('data-user');
-                    document.getElementById('disciplineUser').value = userName;
-                    document.getElementById('disciplineModal').style.display = 'flex';
+            // Sign In Modal
+            document.getElementById('confirmSignIn').addEventListener('click', function() {
+                const userName = document.getElementById('signInUser').value;
+                if (userName) {
+                    signInUser(userName);
+                    document.getElementById('signInModal').style.display = 'none';
+                } else {
+                    showNotification('Please select a user to sign in', 'error');
+                }
+            });
+
+            // Sign Out Modal
+            document.getElementById('confirmSignOut').addEventListener('click', function() {
+                const userName = document.getElementById('signOutUser').value;
+                if (userName) {
+                    signOutUser(userName);
+                    document.getElementById('signOutModal').style.display = 'none';
+                } else {
+                    showNotification('Please select a user to sign out', 'error');
+                }
+            });
+
+            // Discipline Modal
+            document.getElementById('confirmDiscipline').addEventListener('click', function() {
+                const userName = document.getElementById('disciplineUser').value;
+                const points = parseInt(document.getElementById('points').value);
+                const reason = document.getElementById('reason').value;
+                const details = document.getElementById('details').value;
+                
+                if (userName) {
+                    assignDiscipline(userName, points, reason, details);
+                    document.getElementById('disciplineModal').style.display = 'none';
+                } else {
+                    showNotification('Please select a user', 'error');
+                }
+            });
+
+            // Export Data Button
+            document.getElementById('exportDataBtn').addEventListener('click', function() {
+                if (state.recentSignings.length === 0) {
+                    showNotification('No data to export', 'error');
+                    return;
+                }
+                
+                // Create CSV content
+                let csvContent = "User Name,User ID,Check-in Time,Check-out Time,Duration,Status\n";
+                state.recentSignings.forEach(signing => {
+                    csvContent += `"${signing.user}","${signing.id}","${signing.checkIn}","${signing.checkOut}","${signing.duration}","${signing.status}"\n`;
                 });
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'intver_signings_export.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Data exported successfully', 'success');
             });
 
             // Close Modals
@@ -1346,31 +1265,6 @@
                         modal.style.display = 'none';
                     });
                 });
-            });
-
-            // Confirm Sign In
-            document.getElementById('confirmSignIn').addEventListener('click', function() {
-                const userName = document.getElementById('signInUser').value;
-                signInUser(userName);
-                document.getElementById('signInModal').style.display = 'none';
-            });
-
-            // Confirm Sign Out
-            document.getElementById('confirmSignOut').addEventListener('click', function() {
-                const userName = document.getElementById('signOutUser').value;
-                signOutUser(userName);
-                document.getElementById('signOutModal').style.display = 'none';
-            });
-
-            // Confirm Discipline
-            document.getElementById('confirmDiscipline').addEventListener('click', function() {
-                const userName = document.getElementById('disciplineUser').value;
-                const points = parseInt(document.getElementById('points').value);
-                const reason = document.getElementById('reason').value;
-                const details = document.getElementById('details').value;
-                
-                assignDiscipline(userName, points, reason, details);
-                document.getElementById('disciplineModal').style.display = 'none';
             });
 
             // Mobile Menu Toggle
@@ -1386,29 +1280,214 @@
                     }
                 });
             });
+
+            // Update time in modals when opened
+            document.getElementById('signInModal').addEventListener('click', function() {
+                document.getElementById('signInTime').value = getCurrentTime();
+            });
+            
+            document.getElementById('signOutModal').addEventListener('click', function() {
+                document.getElementById('signOutTime').value = getCurrentTime();
+            });
+        }
+
+        // Add a new user to the system
+        function addUser(name, id, image) {
+            state.users[name] = { 
+                id: id, 
+                status: 'out', 
+                points: 0,
+                image: image
+            };
+            
+            renderUserCards();
+            updateUserSelects();
+            showNotification(`User ${name} added successfully`, 'success');
+        }
+
+        // Render user cards based on current state
+        function renderUserCards() {
+            const userCount = Object.keys(state.users).length;
+            
+            if (userCount === 0) {
+                userCardsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No Users Added Yet</h3>
+                        <p>Start by adding users to the system</p>
+                        <button class="btn btn-primary" id="addFirstUserBtn">
+                            <i class="fas fa-user-plus"></i> Add First User
+                        </button>
+                    </div>
+                `;
+                // Reattach event listener
+                document.getElementById('addFirstUserBtn').addEventListener('click', function() {
+                    document.getElementById('addUserModal').style.display = 'flex';
+                });
+                return;
+            }
+            
+            let userCardsHTML = '';
+            
+            // Add the "Add User" card
+            userCardsHTML += `
+                <div class="user-card add-user-btn" id="add-user-card">
+                    <div class="user-card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add New User</span>
+                    </div>
+                </div>
+            `;
+            
+            // Add cards for each user
+            for (const [name, user] of Object.entries(state.users)) {
+                const statusClass = user.status === 'in' ? 'status-in' : 'status-out';
+                const statusText = user.status === 'in' ? 'Signed In' : 'Signed Out';
+                const signButton = user.status === 'in' 
+                    ? `<button class="btn btn-danger sign-out-btn" data-user="${name}">
+                           <i class="fas fa-sign-out-alt"></i> Sign Out
+                       </button>`
+                    : `<button class="btn btn-success sign-in-btn" data-user="${name}">
+                           <i class="fas fa-sign-in-alt"></i> Sign In
+                       </button>`;
+                
+                const sessionInfo = user.status === 'in' 
+                    ? `<div class="user-stat">
+                           <span class="user-stat-label">Check-in Time:</span>
+                           <span class="user-stat-value">${user.checkInTime || 'N/A'}</span>
+                       </div>
+                       <div class="user-stat">
+                           <span class="user-stat-label">Current Session:</span>
+                           <span class="user-stat-value" id="${name.toLowerCase()}-session">${user.sessionDuration || '0h 0m'}</span>
+                       </div>`
+                    : `<div class="user-stat">
+                           <span class="user-stat-label">Last Session:</span>
+                           <span class="user-stat-value">${user.lastSession?.duration || 'N/A'}</span>
+                       </div>
+                       <div class="user-stat">
+                           <span class="user-stat-label">Last Activity:</span>
+                           <span class="user-stat-value">${user.lastSession?.endTime || 'N/A'}</span>
+                       </div>`;
+                
+                userCardsHTML += `
+                    <div class="user-card" id="user-${name.toLowerCase()}">
+                        <div class="user-card-header">
+                            <img src="${user.image}" alt="${name}" class="user-card-img">
+                            <div class="user-card-info">
+                                <h3>${name}</h3>
+                                <p>ID: ${user.id}</p>
+                            </div>
+                        </div>
+                        <div class="user-card-body">
+                            <div class="user-stat">
+                                <span class="user-stat-label">Status:</span>
+                                <span class="user-stat-value"><span class="user-status ${statusClass}">${statusText}</span></span>
+                            </div>
+                            ${sessionInfo}
+                            <div class="user-stat">
+                                <span class="user-stat-label">Disciplinary Points:</span>
+                                <span class="user-stat-value" id="${name.toLowerCase()}-points">${user.points}</span>
+                            </div>
+                        </div>
+                        <div class="user-card-footer">
+                            ${signButton}
+                            <button class="btn btn-primary discipline-btn" data-user="${name}">
+                                <i class="fas fa-exclamation-triangle"></i> Discipline
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            userCardsContainer.innerHTML = userCardsHTML;
+            
+            // Reattach event listeners to the new buttons
+            document.getElementById('add-user-card').addEventListener('click', function() {
+                document.getElementById('addUserModal').style.display = 'flex';
+            });
+            
+            document.querySelectorAll('.sign-in-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userName = this.getAttribute('data-user');
+                    document.getElementById('signInUser').value = userName;
+                    document.getElementById('signInModal').style.display = 'flex';
+                });
+            });
+            
+            document.querySelectorAll('.sign-out-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userName = this.getAttribute('data-user');
+                    document.getElementById('signOutUser').value = userName;
+                    document.getElementById('signOutModal').style.display = 'flex';
+                });
+            });
+            
+            document.querySelectorAll('.discipline-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userName = this.getAttribute('data-user');
+                    document.getElementById('disciplineUser').value = userName;
+                    document.getElementById('disciplineModal').style.display = 'flex';
+                });
+            });
+        }
+
+        // Update user selects in modals
+        function updateUserSelects() {
+            const signInSelect = document.getElementById('signInUser');
+            const signOutSelect = document.getElementById('signOutUser');
+            const disciplineSelect = document.getElementById('disciplineUser');
+            
+            // Clear existing options except the first one
+            while (signInSelect.children.length > 1) signInSelect.removeChild(signInSelect.lastChild);
+            while (signOutSelect.children.length > 1) signOutSelect.removeChild(signOutSelect.lastChild);
+            while (disciplineSelect.children.length > 1) disciplineSelect.removeChild(disciplineSelect.lastChild);
+            
+            // Add users to selects
+            for (const [name, user] of Object.entries(state.users)) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                
+                // For sign in, only show users who are signed out
+                if (user.status === 'out') {
+                    signInSelect.appendChild(option.cloneNode(true));
+                }
+                
+                // For sign out, only show users who are signed in
+                if (user.status === 'in') {
+                    signOutSelect.appendChild(option.cloneNode(true));
+                }
+                
+                // For discipline, show all users
+                disciplineSelect.appendChild(option.cloneNode(true));
+            }
         }
 
         // Sign in a user
         function signInUser(userName) {
-            state.users[userName].status = 'in';
-            state.users[userName].checkInTime = new Date();
+            const user = state.users[userName];
+            user.status = 'in';
+            user.checkInTime = getCurrentTime();
             state.activeUsers++;
             state.todaySignings++;
             
-            // Update UI
-            const userCard = document.getElementById(`user-${userName.toLowerCase()}`);
-            userCard.querySelector('.user-status').className = 'user-status status-in';
-            userCard.querySelector('.user-status').textContent = 'Signed In';
-            userCard.querySelector('.sign-in-btn').style.display = 'none';
-            userCard.querySelector('.sign-out-btn').style.display = 'flex';
+            // Start session timer
+            state.sessionTimers[userName] = {
+                startTime: new Date(),
+                interval: setInterval(() => {
+                    updateSessionDuration(userName);
+                }, 60000) // Update every minute
+            };
             
-            // Update recent signings
-            const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // Update UI
+            renderUserCards();
+            updateUserSelects();
+            
+            // Add to recent signings
             state.recentSignings.unshift({
                 user: userName,
-                id: state.users[userName].id,
-                checkIn: timeString,
+                id: user.id,
+                checkIn: user.checkInTime,
                 checkOut: '-',
                 duration: '0h 0m',
                 status: 'active'
@@ -1419,46 +1498,71 @@
             showNotification(`${userName} has been signed in successfully!`, 'success');
         }
 
-        // Sign out a user
-        function signOutUser(userName) {
-            state.users[userName].status = 'out';
-            state.activeUsers--;
+        // Update session duration for a user
+        function updateSessionDuration(userName) {
+            const user = state.users[userName];
+            if (user.status !== 'in') return;
             
-            // Calculate session duration
             const now = new Date();
-            const diff = now - state.users[userName].checkInTime;
+            const startTime = state.sessionTimers[userName].startTime;
+            const diff = now - startTime;
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const duration = `${hours}h ${minutes}m`;
             
-            // Store last session info
-            state.users[userName].lastSession = {
-                duration: duration,
-                endTime: getCurrentTime()
-            };
+            // Update the session duration in the UI
+            const sessionElement = document.getElementById(`${userName.toLowerCase()}-session`);
+            if (sessionElement) {
+                sessionElement.textContent = `${hours}h ${minutes}m`;
+            }
             
-            // Update UI
-            const userCard = document.getElementById(`user-${userName.toLowerCase()}`);
-            userCard.querySelector('.user-status').className = 'user-status status-out';
-            userCard.querySelector('.user-status').textContent = 'Signed Out';
-            userCard.querySelector('.sign-in-btn').style.display = 'flex';
-            userCard.querySelector('.sign-out-btn').style.display = 'none';
-            
-            // Update session info in UI
-            const sessionElement = userCard.querySelector('.user-stat:nth-child(3) .user-stat-value');
-            sessionElement.textContent = duration;
-            
-            // Update recent signings
-            const checkInTime = state.users[userName].checkInTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const checkOutTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            // Find the active signing and update it
+            // Update the recent signings table
             const activeSigningIndex = state.recentSignings.findIndex(s => 
                 s.user === userName && s.status === 'active'
             );
             
             if (activeSigningIndex !== -1) {
-                state.recentSignings[activeSigningIndex].checkOut = checkOutTime;
+                state.recentSignings[activeSigningIndex].duration = `${hours}h ${minutes}m`;
+                updateRecentSigningsTable();
+            }
+        }
+
+        // Sign out a user
+        function signOutUser(userName) {
+            const user = state.users[userName];
+            user.status = 'out';
+            state.activeUsers--;
+            
+            // Stop session timer
+            if (state.sessionTimers[userName]) {
+                clearInterval(state.sessionTimers[userName].interval);
+                delete state.sessionTimers[userName];
+            }
+            
+            // Calculate session duration
+            const now = new Date();
+            const startTime = new Date(user.checkInTime);
+            const diff = now - startTime;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const duration = `${hours}h ${minutes}m`;
+            
+            // Store last session info
+            user.lastSession = {
+                duration: duration,
+                endTime: getCurrentTime()
+            };
+            
+            // Update UI
+            renderUserCards();
+            updateUserSelects();
+            
+            // Update recent signings
+            const activeSigningIndex = state.recentSignings.findIndex(s => 
+                s.user === userName && s.status === 'active'
+            );
+            
+            if (activeSigningIndex !== -1) {
+                state.recentSignings[activeSigningIndex].checkOut = user.lastSession.endTime;
                 state.recentSignings[activeSigningIndex].duration = duration;
                 state.recentSignings[activeSigningIndex].status = 'completed';
             }
@@ -1471,34 +1575,45 @@
         // Assign disciplinary points to a user
         function assignDiscipline(userName, points, reason, details) {
             state.users[userName].points += points;
-            state.pendingActions--;
+            state.pendingActions = Math.max(0, state.pendingActions - 1);
             
             // Update UI
-            document.getElementById(`${userName.toLowerCase()}-points`).textContent = state.users[userName].points;
-            
+            renderUserCards();
             updateDashboardStats();
             showNotification(`Disciplinary action assigned to ${userName}: ${points} point(s) for ${reason}`, 'info');
         }
 
         // Update recent signings table
         function updateRecentSigningsTable() {
-            const tableBody = document.getElementById('recentSigningsTable');
-            tableBody.innerHTML = '';
+            if (state.recentSignings.length === 0) {
+                recentSigningsTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <h3>No Recent Activity</h3>
+                            <p>Sign-in/out activity will appear here</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let tableHTML = '';
             
             state.recentSignings.forEach(signing => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${signing.user}</td>
-                    <td>${signing.id}</td>
-                    <td>${signing.checkIn}</td>
-                    <td>${signing.checkOut}</td>
-                    <td>${signing.duration}</td>
-                    <td><span class="badge ${signing.status === 'active' ? 'badge-success' : 'badge-warning'}">${signing.status === 'active' ? 'Active' : 'Completed'}</span></td>
+                tableHTML += `
+                    <tr>
+                        <td>${signing.user}</td>
+                        <td>${signing.id}</td>
+                        <td>${signing.checkIn}</td>
+                        <td>${signing.checkOut}</td>
+                        <td>${signing.duration}</td>
+                        <td><span class="badge ${signing.status === 'active' ? 'badge-success' : 'badge-warning'}">${signing.status === 'active' ? 'Active' : 'Completed'}</span></td>
+                    </tr>
                 `;
-                
-                tableBody.appendChild(row);
             });
+            
+            recentSigningsTable.innerHTML = tableHTML;
         }
 
         // Show notification
