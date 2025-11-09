@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTVER System - Sign-In/Out Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--dark);
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .sidebar-menu li.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .card-icon.primary {
+            background: var(--primary);
+        }
+        
+        .card-icon.success {
+            background: var(--success);
+        }
+        
+        .card-icon.warning {
+            background: var(--warning);
+        }
+        
+        .card-icon.danger {
+            background: var(--danger);
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .card-footer {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* User Cards */
+        .user-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .user-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .user-card-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            background: var(--light);
+        }
+        
+        .user-card-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .user-card-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-card-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .user-card-body {
+            padding: 15px;
+        }
+        
+        .user-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-in {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+        
+        .status-out {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+        
+        .user-card-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        /* Recent Signings Table */
+        .recent-signings {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+                text-align: center;
+            }
+            
+            .sidebar-header h2, .sidebar-header p, .sidebar-menu span {
+                display: none;
+            }
+            
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-cards, .user-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>INTVER System</h2>
+                <p>User Management & Tracking</p>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="#">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Sign In/Out</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-history"></i>
+                            <span>Recent Signings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Discipline</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span>User Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Sign-In/Out Dashboard</h1>
+                <div class="user-info">
+                    <img src="https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472" alt="Admin">
+                    <span>Admin User</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Active Users</div>
+                        <div class="card-icon primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">2</div>
+                    <div class="card-footer">Currently signed in</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Today's Signings</div>
+                        <div class="card-icon success">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">8</div>
+                    <div class="card-footer">Total check-ins today</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Avg. Session</div>
+                        <div class="card-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">2h 34m</div>
+                    <div class="card-footer">Average session duration</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pending Actions</div>
+                        <div class="card-icon danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">3</div>
+                    <div class="card-footer">Disciplinary actions needed</div>
+                </div>
+            </div>
+
+            <!-- User Cards -->
+            <div class="user-cards">
+                <!-- Chris Card -->
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_qoql0aqoql0aqoql.png?updatedAt=1762730489451" alt="Chris" class="user-card-img">
+                        <div class="user-card-info">
+                            <h3>Chris</h3>
+                            <p>ID: 2347802342</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <p><strong>Status:</strong> <span class="user-status status-in">Signed In</span></p>
+                        <p><strong>Check-in Time:</strong> 09:15 AM</p>
+                        <p><strong>Current Session:</strong> 2h 45m</p>
+                        <p><strong>Disciplinary Points:</strong> 0</p>
+                    </div>
+                    <div class="user-card-footer">
+                        <button class="btn btn-danger sign-out-btn" data-user="Chris">Sign Out</button>
+                        <button class="btn btn-primary discipline-btn" data-user="Chris">Discipline</button>
+                    </div>
+                </div>
+
+                <!-- Braylee Card -->
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_gfz912gfz912gfz9.png?updatedAt=1762730489086" alt="Braylee" class="user-card-img">
+                        <div class="user-card-info">
+                            <h3>Braylee</h3>
+                            <p>ID: 62347890323</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <p><strong>Status:</strong> <span class="user-status status-out">Signed Out</span></p>
+                        <p><strong>Last Session:</strong> 1h 30m</p>
+                        <p><strong>Last Activity:</strong> Yesterday, 5:30 PM</p>
+                        <p><strong>Disciplinary Points:</strong> 2</p>
+                    </div>
+                    <div class="user-card-footer">
+                        <button class="btn btn-success sign-in-btn" data-user="Braylee">Sign In</button>
+                        <button class="btn btn-primary discipline-btn" data-user="Braylee">Discipline</button>
+                    </div>
+                </div>
+
+                <!-- Braxton Card -->
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <img src="https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_avef86avef86avef.png?updatedAt=1762730489187" alt="Braxton" class="user-card-img">
+                        <div class="user-card-info">
+                            <h3>Braxton</h3>
+                            <p>ID: 234780234890</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <p><strong>Status:</strong> <span class="user-status status-in">Signed In</span></p>
+                        <p><strong>Check-in Time:</strong> 10:05 AM</p>
+                        <p><strong>Current Session:</strong> 1h 55m</p>
+                        <p><strong>Disciplinary Points:</strong> 1</p>
+                    </div>
+                    <div class="user-card-footer">
+                        <button class="btn btn-danger sign-out-btn" data-user="Braxton">Sign Out</button>
+                        <button class="btn btn-primary discipline-btn" data-user="Braxton">Discipline</button>
+                    </div>
+                </div>
+
+                <!-- Lacey Card -->
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <img src="https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472" alt="Lacey" class="user-card-img">
+                        <div class="user-card-info">
+                            <h3>Lacey</h3>
+                            <p>ID: 23940236849001</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <p><strong>Status:</strong> <span class="user-status status-out">Signed Out</span></p>
+                        <p><strong>Last Session:</strong> 3h 20m</p>
+                        <p><strong>Last Activity:</strong> Today, 12:15 PM</p>
+                        <p><strong>Disciplinary Points:</strong> 0</p>
+                    </div>
+                    <div class="user-card-footer">
+                        <button class="btn btn-success sign-in-btn" data-user="Lacey">Sign In</button>
+                        <button class="btn btn-primary discipline-btn" data-user="Lacey">Discipline</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Signings Table -->
+            <div class="recent-signings">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Signings</h2>
+                    <button class="btn btn-primary">Export Data</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>User ID</th>
+                            <th>Check-in Time</th>
+                            <th>Check-out Time</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Chris</td>
+                            <td>2347802342</td>
+                            <td>09:15 AM</td>
+                            <td>-</td>
+                            <td>2h 45m</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Braxton</td>
+                            <td>234780234890</td>
+                            <td>10:05 AM</td>
+                            <td>-</td>
+                            <td>1h 55m</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Lacey</td>
+                            <td>23940236849001</td>
+                            <td>09:00 AM</td>
+                            <td>12:15 PM</td>
+                            <td>3h 15m</td>
+                            <td><span class="badge badge-warning">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Braylee</td>
+                            <td>62347890323</td>
+                            <td>04:00 PM</td>
+                            <td>05:30 PM</td>
+                            <td>1h 30m</td>
+                            <td><span class="badge badge-warning">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Chris</td>
+                            <td>2347802342</td>
+                            <td>01:30 PM</td>
+                            <td>04:45 PM</td>
+                            <td>3h 15m</td>
+                            <td><span class="badge badge-warning">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div class="modal" id="signInModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Sign In User</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="signInUser">User</label>
+                    <input type="text" id="signInUser" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="signInTime">Time</label>
+                    <input type="text" id="signInTime" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirmSignIn">Confirm Sign In</button>
+                <button class="btn btn-danger close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Out Modal -->
+    <div class="modal" id="signOutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Sign Out User</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="signOutUser">User</label>
+                    <input type="text" id="signOutUser" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="signOutTime">Time</label>
+                    <input type="text" id="signOutTime" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="sessionDuration">Session Duration</label>
+                    <input type="text" id="sessionDuration" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirmSignOut">Confirm Sign Out</button>
+                <button class="btn btn-danger close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discipline Modal -->
+    <div class="modal" id="disciplineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Assign Disciplinary Action</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="disciplineUser">User</label>
+                    <input type="text" id="disciplineUser" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="points">Points to Deduct</label>
+                    <select id="points" class="form-control">
+                        <option value="1">1 Point</option>
+                        <option value="2">2 Points</option>
+                        <option value="3">3 Points</option>
+                        <option value="5">5 Points (Major Infraction)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Reason</label>
+                    <select id="reason" class="form-control">
+                        <option value="Tardiness">Tardiness</option>
+                        <option value="Inappropriate Behavior">Inappropriate Behavior</option>
+                        <option value="Policy Violation">Policy Violation</option>
+                        <option value="Security Breach">Security Breach</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="details">Additional Details</label>
+                    <textarea id="details" class="form-control" rows="3" placeholder="Provide specific details about the incident..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirmDiscipline">Assign Discipline</button>
+                <button class="btn btn-danger close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const signInBtns = document.querySelectorAll('.sign-in-btn');
+        const signOutBtns = document.querySelectorAll('.sign-out-btn');
+        const disciplineBtns = document.querySelectorAll('.discipline-btn');
+        const closeBtns = document.querySelectorAll('.close-btn, .close-modal');
+        const modals = document.querySelectorAll('.modal');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Current time function
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Calculate session duration (mock function)
+        function calculateSessionDuration(startTime) {
+            // This would normally calculate based on actual times
+            // For demo, we'll return a fixed value
+            return "2h 45m";
+        }
+
+        // Open Sign In Modal
+        signInBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userName = this.getAttribute('data-user');
+                document.getElementById('signInUser').value = userName;
+                document.getElementById('signInTime').value = getCurrentTime();
+                document.getElementById('signInModal').style.display = 'flex';
+            });
+        });
+
+        // Open Sign Out Modal
+        signOutBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userName = this.getAttribute('data-user');
+                document.getElementById('signOutUser').value = userName;
+                document.getElementById('signOutTime').value = getCurrentTime();
+                document.getElementById('sessionDuration').value = calculateSessionDuration();
+                document.getElementById('signOutModal').style.display = 'flex';
+            });
+        });
+
+        // Open Discipline Modal
+        disciplineBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userName = this.getAttribute('data-user');
+                document.getElementById('disciplineUser').value = userName;
+                document.getElementById('disciplineModal').style.display = 'flex';
+            });
+        });
+
+        // Close Modals
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            });
+        });
+
+        // Confirm Sign In
+        document.getElementById('confirmSignIn').addEventListener('click', function() {
+            const userName = document.getElementById('signInUser').value;
+            alert(`${userName} has been signed in successfully!`);
+            document.getElementById('signInModal').style.display = 'none';
+            
+            // In a real app, this would update the database and refresh the UI
+            // For demo, we'll just show an alert
+        });
+
+        // Confirm Sign Out
+        document.getElementById('confirmSignOut').addEventListener('click', function() {
+            const userName = document.getElementById('signOutUser').value;
+            alert(`${userName} has been signed out successfully!`);
+            document.getElementById('signOutModal').style.display = 'none';
+            
+            // In a real app, this would update the database and refresh the UI
+            // For demo, we'll just show an alert
+        });
+
+        // Confirm Discipline
+        document.getElementById('confirmDiscipline').addEventListener('click', function() {
+            const userName = document.getElementById('disciplineUser').value;
+            const points = document.getElementById('points').value;
+            const reason = document.getElementById('reason').value;
+            
+            alert(`Disciplinary action assigned to ${userName}: ${points} point(s) for ${reason}`);
+            document.getElementById('disciplineModal').style.display = 'none';
+            
+            // In a real app, this would update the database and refresh the UI
+            // For demo, we'll just show an alert
+        });
+
+        // Mobile Menu Toggle
+        mobileMenuBtn.addEventListener('click', function() {
+            sidebar.style.width = sidebar.style.width === '250px' ? '0' : '250px';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
