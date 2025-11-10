@@ -753,29 +753,6 @@
             background: var(--accent);
         }
         
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-        
-        .empty-state h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .empty-state p {
-            margin-bottom: 20px;
-        }
-        
         /* Add User Button */
         .add-user-btn {
             display: flex;
@@ -932,15 +909,7 @@
 
             <!-- User Cards -->
             <div class="user-cards" id="userCardsContainer">
-                <!-- Empty state - no users added yet -->
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <h3>No Users Added Yet</h3>
-                    <p>Start by adding users to the system</p>
-                    <button class="btn btn-primary" id="addFirstUserBtn">
-                        <i class="fas fa-user-plus"></i> Add First User
-                    </button>
-                </div>
+                <!-- Users will be loaded here -->
             </div>
 
             <!-- Recent Signings Table -->
@@ -964,10 +933,9 @@
                     </thead>
                     <tbody id="recentSigningsTable">
                         <tr>
-                            <td colspan="6" class="empty-state">
-                                <i class="fas fa-history"></i>
-                                <h3>No Recent Activity</h3>
-                                <p>Sign-in/out activity will appear here</p>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                                <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                                No recent activity
                             </td>
                         </tr>
                     </tbody>
@@ -1114,9 +1082,34 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Application State - Starts completely empty
+        // Application State - Starts with the 4 specified users but NO activity
         const state = {
-            users: {},
+            users: {
+                'Chris': { 
+                    id: '2347802342', 
+                    status: 'out', 
+                    points: 0,
+                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_qoql0aqoql0aqoql.png?updatedAt=1762730489451'
+                },
+                'Braylee': { 
+                    id: '62347890323', 
+                    status: 'out', 
+                    points: 0,
+                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_gfz912gfz912gfz9.png?updatedAt=1762730489086'
+                },
+                'Braxton': { 
+                    id: '234780234890', 
+                    status: 'out', 
+                    points: 0,
+                    image: 'https://ik.imagekit.io/tycncf0zq0/Gemini_Generated_Image_avef86avef86avef.png?updatedAt=1762730489187'
+                },
+                'Lacey': { 
+                    id: '23940236849001', 
+                    status: 'out', 
+                    points: 0,
+                    image: 'https://ik.imagekit.io/tycncf0zq0/unnamed.jpg?updatedAt=1762730486472'
+                }
+            },
             recentSignings: [],
             activeUsers: 0,
             todaySignings: 0,
@@ -1138,6 +1131,8 @@
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
+            renderUserCards();
+            updateUserSelects();
             updateDashboardStats();
             setupEventListeners();
         });
@@ -1165,14 +1160,18 @@
                     const hours = Math.floor(avgMinutes / 60);
                     const minutes = avgMinutes % 60;
                     document.getElementById('avgSessionDuration').textContent = `${hours}h ${minutes}m`;
+                } else {
+                    document.getElementById('avgSessionDuration').textContent = '0h 0m';
                 }
+            } else {
+                document.getElementById('avgSessionDuration').textContent = '0h 0m';
             }
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Add First User Button
-            document.getElementById('addFirstUserBtn').addEventListener('click', function() {
+            // Add User Button
+            document.getElementById('add-user-card').addEventListener('click', function() {
                 document.getElementById('addUserModal').style.display = 'flex';
             });
 
@@ -1308,24 +1307,6 @@
         // Render user cards based on current state
         function renderUserCards() {
             const userCount = Object.keys(state.users).length;
-            
-            if (userCount === 0) {
-                userCardsContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <h3>No Users Added Yet</h3>
-                        <p>Start by adding users to the system</p>
-                        <button class="btn btn-primary" id="addFirstUserBtn">
-                            <i class="fas fa-user-plus"></i> Add First User
-                        </button>
-                    </div>
-                `;
-                // Reattach event listener
-                document.getElementById('addFirstUserBtn').addEventListener('click', function() {
-                    document.getElementById('addUserModal').style.display = 'flex';
-                });
-                return;
-            }
             
             let userCardsHTML = '';
             
@@ -1588,10 +1569,9 @@
             if (state.recentSignings.length === 0) {
                 recentSigningsTable.innerHTML = `
                     <tr>
-                        <td colspan="6" class="empty-state">
-                            <i class="fas fa-history"></i>
-                            <h3>No Recent Activity</h3>
-                            <p>Sign-in/out activity will appear here</p>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                            <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                            No recent activity
                         </td>
                     </tr>
                 `;
